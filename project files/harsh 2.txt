@@ -1,0 +1,21 @@
+# General info
+print(df.info())
+
+# Summary statistics
+print(df.describe())
+
+# Count of target classes
+print(df['Class'].value_counts())
+# Load the dataset
+df = pd.read_csv('indian_liver_patient.csv')
+
+# Rename for clarity
+df.columns = ['Age', 'Gender', 'TB', 'DB', 'Alkphos', 'Sgpt', 'Sgot',
+              'TP', 'ALB', 'A_G_Ratio', 'Class']
+
+# Encode categorical data
+df['Gender'] = df['Gender'].map({'Male': 1, 'Female': 0})
+df['Class'] = df['Class'].map({1: 'Liver Disease', 2: 'No Disease'})
+
+# Fill missing values
+df.fillna(df.mean(), inplace=True)
