@@ -1,0 +1,35 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.impute import SimpleImputer
+
+# Load data
+df = pd.read_csv('liver_cirrhosis_data.csv')
+
+# Quick overview
+print(df.head())
+print(df.info())
+
+# 1. Handle missing values
+imputer = SimpleImputer(strategy='mean')
+df[['Bilirubin', 'Albumin', 'Prothrombin Time']] = imputer.fit_transform(df[['Bilirubin', 'Albumin', 'Prothrombin Time']])
+
+# 2. Encode categorical variables
+label_encoder = LabelEncoder()
+df['Gender'] = label_encoder.fit_transform(df['Gender'])  # Male=1, Female=0
+df['Status'] = label_encoder.fit_transform(df['Status'])  # Dead=1, Alive=0
+
+# 3. Normalize continuous variables
+scaler = StandardScaler()
+df[['Age', 'Bilirubin', 'Albumin', 'Prothrombin Time']] = scaler.fit_transform(df[['Age', 'Bilirubin', 'Albumin', 'Prothrombin Time']])
+
+# 4. Create features and labels
+X = df.drop(columns=['Status'])
+y = df['Status']
+
+# 5. Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print("Training Features Shape:", X_train.shape)
+print("Training Labels Shape:", y_train.shape)
